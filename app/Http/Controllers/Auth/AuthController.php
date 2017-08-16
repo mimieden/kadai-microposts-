@@ -22,6 +22,11 @@ class AuthController extends Controller
     */
 
     use AuthenticatesAndRegistersUsers, ThrottlesLogins;
+    
+    // 追加 construct()でfalseの場合、postResister()で成功した場合のリダイレクト先
+    protected $redirectTo = '/';
+    // 追加 postLogin()で失敗した場合のリダイレクト先
+    protected $loginPath = '/login';    
 
     /**
      * Create a new authentication controller instance.
