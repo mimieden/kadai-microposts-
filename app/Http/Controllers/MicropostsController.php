@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
+use App;  //追加 destroyのApp\Micropost::find($id)のエラー対応
 
 class MicropostsController extends Controller
 {
