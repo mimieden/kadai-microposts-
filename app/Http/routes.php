@@ -11,9 +11,7 @@
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
-});
+Route::get('/', 'WelcomeController@index');
 
 // ユーザ登録
 Route::get('/signup', 'Auth\AuthController@getRegister')->name('signup.get');
@@ -24,9 +22,12 @@ Route::get('login', 'Auth\AuthController@getLogin')->name('login.get');
 Route::post('login', 'Auth\AuthController@postLogin')->name('login.post');
 Route::get('logout', 'Auth\AuthController@getLogout')->name('logout.get');
 
-//ユーザ機能(その他)
-//Route::get('users', 'UsersController@index');
-//Route::get('users/{id}', 'UsersController@show');
+//ログイン時のみ：ユーザ機能(その他)/マイクロポスト
 Route::group(['middleware' => 'auth'], function () {
+    //Route::get('users', 'UsersController@index');
+    //Route::get('users/{id}', 'UsersController@show');
     Route::resource('users', 'UsersController', ['only' => ['index', 'show']]);
+    //Route::post('microposts', 'MicropostsController@store');
+    //Route::delete('microposts/{id}', 'MicropostsController@destroy');
+    Route::resource('microposts', 'MicropostsController', ['only' => ['store', 'destroy']]);
 });
