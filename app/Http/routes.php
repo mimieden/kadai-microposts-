@@ -22,12 +22,29 @@ Route::get('login', 'Auth\AuthController@getLogin')->name('login.get');
 Route::post('login', 'Auth\AuthController@postLogin')->name('login.post');
 Route::get('logout', 'Auth\AuthController@getLogout')->name('logout.get');
 
-//ログイン時のみ：ユーザ機能(その他)/マイクロポスト
+//ログイン時のみ
 Route::group(['middleware' => 'auth'], function () {
+    //ユーザー機能(その他)
     //Route::get('users', 'UsersController@index');
     //Route::get('users/{id}', 'UsersController@show');
     Route::resource('users', 'UsersController', ['only' => ['index', 'show']]);
+    
+    //フォロー機能
+    Route::group(['prefix' => 'users/{id}'], function () { 
+        //POST /users/{id}/follow <フォロー>
+        Route::post('follow', 'UserFollowController@store')->name('user.follow');
+        //DELETE /users/{id}/unfollow <アンフォロー>
+        Route::delete('unfollow', 'UserFollowController@destroy')->name('user.unfollow');
+        //GET /users/{id}/followings <フォローしているユーザ一覧>
+        Route::get('followings', 'UsersController@followings')->name('users.followings');
+        //GET /users/{id}/followers <フォローされているユーザ(フォロワー)一覧>
+        Route::get('followers', 'UsersController@followers')->name('users.followers');
+    });    
+    
+    //マイクロポスト
     //Route::post('microposts', 'MicropostsController@store');
     //Route::delete('microposts/{id}', 'MicropostsController@destroy');
     Route::resource('microposts', 'MicropostsController', ['only' => ['store', 'destroy']]);
 });
+
+
