@@ -13,4 +13,9 @@ class Micropost extends Model
     {
         return $this->belongsTo(User::class);
     }
+    
+    public function likers_list()
+    {
+        return $this->belongsToMany(Uses::class, "likes_list", "micropost_id", "user_id")->withTimestamps();
+    }
 }

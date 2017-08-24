@@ -98,4 +98,42 @@ class User extends Model implements AuthenticatableContract,
         return Micropost::whereIn('user_id', $follow_user_ids);
     }
     
+    //お気に入り機能対応
+    public function likes_list()
+    {
+        return $this->belongsToMany(Micropost::class, 'likes_list', 'user_id', 'micropost_id')->withTimestamps();
+    }
+    
+    public function like($micropostId)
+    {
+        // 既にlikeしているかの確認
+        if ($this->like_post($micropostId)) {
+            //既にlikeしている場合何もしない
+            return false;
+        } else {
+            //likeしていない場合はlikeする
+            $this->likes_list()->attach($micropostId);
+            return true;
+        }
+        
+    }
+    
+    public function unlike($micropostId)
+    {
+        // 既にlikeしているかの確認
+        if ($this->like_post($micropostId)) {
+            //既にlikeしているunlikeする
+            $this->likes_list()->detach($micropostId);
+            return true;
+        } else {
+            //likeしていない場合なにもしない
+            return false;
+        }
+        
+    }
+    
+    public function like_post($micropostId) {
+        return $this->likes_list()->where('micropost_id', $micropostId)->exists();
+    }
+    
 }

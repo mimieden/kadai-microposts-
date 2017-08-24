@@ -29,8 +29,8 @@ Route::group(['middleware' => 'auth'], function () {
     //Route::get('users/{id}', 'UsersController@show');
     Route::resource('users', 'UsersController', ['only' => ['index', 'show']]);
     
-    //フォロー機能
     Route::group(['prefix' => 'users/{id}'], function () { 
+        //フォロー機能
         //POST /users/{id}/follow <フォロー>
         Route::post('follow', 'UserFollowController@store')->name('user.follow');
         //DELETE /users/{id}/unfollow <アンフォロー>
@@ -39,12 +39,21 @@ Route::group(['middleware' => 'auth'], function () {
         Route::get('followings', 'UsersController@followings')->name('users.followings');
         //GET /users/{id}/followers <フォローされているユーザ(フォロワー)一覧>
         Route::get('followers', 'UsersController@followers')->name('users.followers');
+        //お気に入り機能
+        //POST /users/{id}/like <お気に入り登録>
+        Route::post('like', 'LikesListController@store')->name('post.like');
+        //POST /users/{id}/unlike <お気に入り登録解除>
+        Route::delete('unlike', 'LikesListController@destroy')->name('post.unlike');
+        //GET /users/{id}/likes  <お気に入り一覧>
+        Route::get('likes', 'UsersController@likes')->name('users.likes');
+        
     });    
     
     //マイクロポスト
     //Route::post('microposts', 'MicropostsController@store');
     //Route::delete('microposts/{id}', 'MicropostsController@destroy');
     Route::resource('microposts', 'MicropostsController', ['only' => ['store', 'destroy']]);
+
 });
 
 
